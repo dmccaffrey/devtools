@@ -12,6 +12,7 @@ user_prefix="dmcc"
 #   pub
 
 function enable_git_functions() {
+    echo "Enabling git functions"
 
     function fixup() {
         git commit --no-verify -a --fixup HEAD

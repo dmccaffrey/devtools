@@ -1,4 +1,5 @@
 function enable_json_functions() {
+    echo "Enabling JSON functions"
 
     function jprint() {
         file="${1}"
