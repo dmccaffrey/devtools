@@ -1,5 +1,5 @@
 main_branch="main"
-user_prefix="dmcc"
+user_prefix="vmsp/dmccaffrey"
 
 # Example workflow:
 #   branch task-xyz 
@@ -10,6 +10,8 @@ user_prefix="dmcc"
 #   rebase
 #   amend <describe changes>
 #   pub
+
+export GPG_TTY=$(tty)
 
 function enable_git_functions() {
     echo "Enabling git functions"
@@ -49,9 +51,10 @@ function enable_git_functions() {
             echo "Branch already exists"
             return 1
         fi
-        git checkout -b "${user_prefix}/${task}"
-        git commit --no-verify --allow-empty -m "${task} - $2"
-        git push -u origin "dmcc/${task}"
+        branch="${user_prefix}/${task}"
+        git checkout -b ${branch}
+        git commit --no-verify --allow-empty -S -m "feat: ${task} - $2"
+        git push -u origin ${branch}
     }
     
     function git_reset() {
@@ -71,8 +74,8 @@ function enable_git_functions() {
     }
 
     function git_prune() {
-    git remote prune origin
-    git branch --merged | grep dmcc/ | xargs git branch -d
+        git remote prune origin
+        git branch --merged | grep dmcc/ | xargs git branch -d
     }
 
     function git_task() {
@@ -83,6 +86,18 @@ function enable_git_functions() {
 
     function git_is_dirty() {
         ! (git diff-index --quiet --cached HEAD -- && git diff-files --quiet)
+    }
+
+    function enable_gpg() {
+        git config --global user.signingkey ${1}
+    }
+
+    function sign_commit() {
+        git commit --amend --no-edit -S
+    }
+
+    function spub() {
+        sign_commit && pub
     }
 
 }
