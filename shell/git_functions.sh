@@ -2,7 +2,7 @@ main_branch="main"
 user_prefix="vmsp/dmccaffrey"
 
 # Example workflow:
-#   branch task-xyz 
+#   branch task-xyz
 #   <make changes>
 #   append
 #   <make changes>
@@ -29,7 +29,7 @@ function enable_git_functions() {
     }
 
     function amend() {
-        git commit --no-verify --amend
+        git commit --no-verify --amend --allow-empty
     }
 
     function pub() {
@@ -53,10 +53,12 @@ function enable_git_functions() {
         fi
         branch="${user_prefix}/${task}"
         git checkout -b ${branch}
-        git commit --no-verify --allow-empty -S -m "feat: ${task} - $2"
+        commit_msg=$(printf "feat: TODO summary\n\nTODO description\n\n**Change Submission Checklist**\n- [ ] Feature Added/Updated\n- [ ] Packaging Added/Updated\n- [ ] Unit Tests Added/Updated\n- [ ] Docs Added/Updated\n\nTesting performed:\nTODO\n\n${task}")
+        git commit --no-verify --allow-empty -S -m ""
+        git commit --amend --allow-empty --no-verify -S -m "${commit_msg}"
         git push -u origin ${branch}
     }
-    
+
     function git_reset() {
         resetmaster && git clean -d force
     }
@@ -93,7 +95,7 @@ function enable_git_functions() {
     }
 
     function sign_commit() {
-        git commit --amend --no-edit -S
+        git commit --amend --no-edit -S --allow-empty
     }
 
     function spub() {
